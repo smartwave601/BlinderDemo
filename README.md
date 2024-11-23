@@ -24,94 +24,39 @@ npm run dev
 
 Finally, open [http://localhost:3000](http://localhost:3000).
 
-### Credentials
+- Frontend side
 
-Before you can take a payment, you'll need to configure your credentials.
-
-Copy `.env.example`to `.env.sandbox`
-
-```sh
-cp .env.example .env.sandbox
+In the html we sould create a div element
+```
+<div id="blinderFrame"></div>
+```
+And initialize the Blinder form widget like this.
+```
+const blinderHandler = new BlinderWidget.Handler('blinderFrame', 1);
+blinderHandler.setClientID('pub_98d1aXXX...');
 ```
 
-Define `SQUARE_ACCESS_TOKEN` with your **Sandbox** Access Token from the Developer Dashboard.
+- Backend side
 
-```ini
-SQUARE_ACCESS_TOKEN=eX@mpl3_t0k3n
+You need to create Blinder object.
+```
+const blinderClient = Blinder.Blinder([PRIVATE_KEY]);
 ```
 
-Restart your server to use this new value.
-
-_Remember: Do not add your access tokens to git!_
-
-## Development
-
-### Setup
-
-When contributing to this project, you'll want to use the version of Node as defined by `.nvmrc`. You can use [nvm](https://github.com/nvm-sh/nvm) to install the correct version:
-
-```sh
-nvm install $(cat .nvmrc)
+Ex:
+```
+const blinderClient = Blinder.Blinder('pk_08e6b9c2fXXX...');
 ```
 
-Follow the "Getting Started" instructions above to install dependencies and verify your local server starts properly.
-
-### Testing
-
-You can run all linters, tests, and builds like CI with `npm test`.
-
-### Linting
-
-You can run all linters with `npm run lint`.
-
-#### ESLint
-
-[ESLint](https://eslint.org/) analyzes the code to find and fix problems. We use [eslint-plugin-square](https://github.com/square/eslint-plugin-square) for out-of-the-box configuration.
-
-```sh
-npm run lint:eslint
+-- API endpoints
+--- createUser
+```
+const createUserRes = await blinderClient.createUser({
+  firstName: payload.firstName,
+  lastName: payload.lastName,
+  email: payload.email,
+});
 ```
 
-##### Fixing warnings and errors automatically
-
-ESLint can sometimes fix warnings and errors automatically for you with its [--fix option](https://eslint.org/docs/user-guide/command-line-interface#fixing-problems).
-
-```sh
-npm run lint:eslint --fix
-```
-
-#### Prettier
-
-[Prettier](https://prettier.io/) is an opinionated code formatter. We use [@square/prettier-config](https://github.com/square/prettier-config) for those opinions.
-
-```sh
-npm run lint:prettier
-```
-
-##### Fixing code style issues
-
-If after running `npm run lint:prettier` you get a warning like, "Code style issues found in the above file(s). Forgot to run Prettier?", you can have Prettier fix them.
-
-```sh
-npm run lint:prettier:fix
-```
-
-## Continuous Integration
-
-[GitHub Actions](https://docs.github.com/en/actions) is used for our CI/CD workflows. See `.github/workflows` for details.
-
-## License
-
-Copyright 2021 Square, Inc.
-
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
+- DB
+The API tokens are stored at "agent_tokens" table of copyrightdb.
