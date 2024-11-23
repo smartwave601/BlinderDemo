@@ -19,7 +19,7 @@ npm install
 Run the development server.
 
 ```sh
-npm run dev
+npm run start
 ```
 
 Finally, open [http://localhost:3000](http://localhost:3000).
