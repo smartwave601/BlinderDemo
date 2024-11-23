@@ -1,0 +1,73 @@
+<!doctype html>
+<html>
+  <head>
+    <link href="/app.css" rel="stylesheet" />
+    <script
+      type="text/javascript"
+      src="/blinder-widget-web.min.js"
+    ></script>
+    
+  </head>
+  <body>
+    <h1>This is create copyright without signup page.</h1>
+    <p>The file uploading is processed in client side.</p>
+    <div>
+      <div>
+        <label for="txt_user_id">user_id</label>
+      </div>
+      <div>
+        <input type="text" id="txt_user_id">
+      </div>
+    </div>
+    <div>
+      <input type="file">
+    </div>
+    <div id="widget-wrapper"></div>
+    <script>
+      const userID = 'b4f89488-d0b1-7092-f441-28d08e6c4610';
+      document.getElementById("").value = userID;
+
+      const blinderHandler = new BlinderWidget.Handler('blinderFrame', 2);
+      blinderHandler.setClientID('pub_98d1adc4096af094666b22b7543c7f3d');
+      blinderHandler.setUserID('b4f89488-d0b1-7092-f441-28d08e6c4610');
+      
+
+      blinderHandler.on('confirmCopyright', async (copyrightInfo) => {
+        const fileContent = new Blob([], { type: 'image/jpeg' });
+        const fileName = 'avatar.png';
+        const fileExt = 'png';
+        const uploadRes = await blinderHandler.uploadMedia(fileName, fileContent, 'image/jpeg');
+        if (uploadRes === null) {
+          return;
+        }
+        const mediaInfo = {
+          storePath: uploadRes.s3path,
+          mType: 'agent',
+          meta: fileName,
+          mediaOriginalName: fileName,
+          mediaOriginalExt: fileExt,
+          mediaSize: fileContent.size,
+        };
+        const res = await blinderHandler.createCopyright(copyrightInfo, mediaInfo);
+        if (res === null) {
+          return;
+        }
+        blinderHandler.requestPayment(res.id);
+        // TODO: ....
+      });
+      
+      blinderHandler.on('confirmPayment', async (sqPaymentInfo) => {
+        const paymentInfo = await blinderHandler.confirmPayment(sqPaymentInfo);
+        if (paymentInfo === null) {
+          return;
+        }
+        blinderHandler.paymentConfirmed();
+        // TODO: ....
+      });
+
+      return () => {
+        iframeHandler.cleanup();
+      };
+    </script>
+  </body>
+</html>

@@ -1,0 +1,56 @@
+<!doctype html>
+<html>
+  <head>
+    <link href="/app.css" rel="stylesheet" />
+    <script
+      type="text/javascript"
+      src="/blinder-widget-web.min.js"
+    ></script>
+    <script>
+      const iframeHandler = new IframeHandler('blinderFrame');
+      iframeHandler.setClientID('pub_98d1adc4096af094666b22b7543c7f3d');
+      iframeHandler.setUserID('b4f89488-d0b1-7092-f441-28d08e6c4610');
+
+      iframeHandler.on('confirmCopyright', async (copyrightInfo) => {
+        const fileContent = new Blob([], { type: 'image/jpeg' });
+        const fileName = 'avatar.png';
+        const fileExt = 'png';
+        const uploadRes = await iframeHandler.uploadMedia(fileName, fileContent, 'image/jpeg');
+        if (uploadRes === null) {
+          return;
+        }
+        const mediaInfo = {
+          storePath: uploadRes.s3path,
+          mType: 'agent',
+          meta: fileName,
+          mediaOriginalName: fileName,
+          mediaOriginalExt: fileExt,
+          mediaSize: fileContent.size,
+        };
+        const res = await iframeHandler.createCopyright(copyrightInfo, mediaInfo);
+        if (res === null) {
+          return;
+        }
+        iframeHandler.requestPayment(res.id);
+        // TODO: ....
+      });
+      
+      iframeHandler.on('confirmPayment', async (sqPaymentInfo) => {
+        const paymentInfo = await iframeHandler.confirmPayment(sqPaymentInfo);
+        if (paymentInfo === null) {
+          return;
+        }
+        iframeHandler.paymentConfirmed();
+        // TODO: ....
+      });
+
+      return () => {
+        iframeHandler.cleanup();
+      };
+    </script>
+  </head>
+  <body>
+    <h1>This is the blinder widget test page.</h1>
+    <div id="widget-wrapper"></div>
+  </body>
+</html>

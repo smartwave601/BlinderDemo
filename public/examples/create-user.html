@@ -1,0 +1,86 @@
+<!doctype html>
+<html>
+  <head>
+    <link href="/app.css" rel="stylesheet" />
+    <script
+      type="text/javascript"
+      src="/blinder-widget-web.min.js"
+    ></script>
+  </head>
+  <body>
+    <h1>This is create user test page.</h1>
+    <div id="create-user">
+      <form id="frm-create-user">
+        <div>
+          <label for="txt_first_name">First Name</label>
+        </div>
+        <div>
+          <input type="text" id="txt_first_name" name = txt_first_name>
+        </div>
+        <div>
+          <label for="txt_last_name">Last Name</label>
+        </div>
+        <div>
+          <input type="text" id="txt_last_name" name = txt_first_name>
+        </div>
+        <div>
+          <label for="txt_email">Email</label>
+        </div>
+        <div>
+          <input type="text" id="txt_email" name = txt_email>
+        </div>
+        <button type="submit" id="btn-submit">Create</button>
+      </form>
+    </div>
+    <div id="fullscreen-loader" class="fullscreen-loader">
+      <div class="loader"></div>
+    </div>
+    <script>
+      function showLoader() {
+        document.getElementById('fullscreen-loader').style.display = 'flex'; // Make the loader visible
+      }
+
+      // Function to hide the fullscreen loader and show the content
+      function hideLoader() {
+          document.getElementById('fullscreen-loader').style.display = 'none'; // Hide the loader
+      }
+
+      document.getElementById("frm-create-user").addEventListener('submit', async function(event) {
+        event.preventDefault();
+        event.stopPropagation();
+
+        // TODO: Add more input validation
+        showLoader();
+        const apiEndpoint = `/create-user`;
+
+        const data = {
+          firstName: document.getElementById('txt_first_name').value,
+          lastName: document.getElementById('txt_last_name').value,
+          email: document.getElementById('txt_email').value,
+        }
+
+        try {
+          const response = await fetch(apiEndpoint, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data),
+          });
+
+          if (response.ok) {
+            const resData = await response.json();
+            if (resData.message === 'user-exist') {
+              alert('user is already resigetered');
+            } else {
+              alert('user is created');
+            }
+          } else (responseErro)
+        } catch (error) {
+          alert('Exception at API call');
+        }
+        hideLoader();
+      });
+    </script>
+  </body>
+</html>

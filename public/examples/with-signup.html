@@ -1,0 +1,40 @@
+<!doctype html>
+<html>
+  <head>
+    <link href="/app.css" rel="stylesheet" />
+    <script
+      type="text/javascript"
+      src="/blinder-widget-web.min.js"
+    ></script>
+  </head>
+  <body>
+    <h1>This is create copyright with signup page.</h1>
+    <div id="blinderFrame"></div>
+    <script>
+      const blinderHandler = new BlinderWidget.Handler('blinderFrame', 1);
+      blinderHandler.setClientID('pub_98d1adc4096af094666b22b7543c7f3d');
+
+      blinderHandler.on('confirmCopyright', async (copyrightInfo) => {
+        const mediaInfo = copyrightInfo.fileInfo;
+        
+        const res = await blinderHandler.createCopyright(copyrightInfo, mediaInfo);
+        if (res === null) {
+          blinderHandler.notifyCopyrightError();
+          return;
+        }
+        blinderHandler.requestPayment(res.id);
+        // TODO: BlinderWidget
+      });
+      
+      blinderHandler.on('confirmPayment', async (sqPaymentInfo) => {
+        console.log('[BLINDER]', sqPaymentInfo);
+        const paymentInfo = await blinderHandler.confirmPayment(sqPaymentInfo);
+        if (paymentInfo === null) {
+          return;
+        }
+        blinderHandler.paymentConfirmed();
+        // TODO: Binder Widget process is completed, Please add more task for your site
+      });
+    </script>
+  </body>
+</html>
