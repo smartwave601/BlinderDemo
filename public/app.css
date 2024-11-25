@@ -16,6 +16,15 @@ h1, h2, h3, h4 {
   margin: 150px auto;
 }
 
+#blinderFrame {
+  min-height: 800px;
+  position: relative;
+}
+
+#blinderFrame > iframe {
+  position: absolute;
+}
+
 .buyer-inputs {
   display: flex;
   gap: 20px;
