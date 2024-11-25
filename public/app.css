@@ -6,6 +6,10 @@ body {
   font-family: Arial, sans-serif;
 }
 
+h1, h2, h3, h4 {
+  margin: 0;
+}
+
 #payment-form {
   max-width: 550px;
   min-width: 300px;
